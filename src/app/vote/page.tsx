@@ -59,6 +59,13 @@ export default function VotePage() {
   const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(null);
 
   useEffect(() => {
+    // PROTEKSI: Cek apakah token tersedia di browser. Jika tidak ada, tendang balik ke halaman login.
+    const activeToken = localStorage.getItem("voter_token");
+    if (!activeToken) {
+      router.push("/");
+      return;
+    }
+
     async function fetchCandidates() {
       try {
         const { data, error } = await supabase
@@ -106,7 +113,7 @@ export default function VotePage() {
     }
 
     fetchCandidates();
-  }, []);
+  }, [router]);
 
   const handleLogout = () => {
     localStorage.removeItem("voter_token");
@@ -126,8 +133,14 @@ export default function VotePage() {
   const finalSubmitVote = async () => {
     setIsConfirmOpen(false);
     
-    // Fallback otomatis ke token '777888' jika localStorage kosong untuk keperluan testing
-    const token = localStorage.getItem("voter_token") || "777888";
+    // Membaca token asli yang dibawa dari halaman login tanpa fallback static text
+    const token = localStorage.getItem("voter_token");
+
+    if (!token) {
+      alert("Sesi memilih Anda tidak valid atau telah berakhir!");
+      router.push("/");
+      return;
+    }
 
     if (!selectedCandidate) {
       alert("Kandidat belum terpilih!");
