@@ -18,23 +18,29 @@ export default function LoginPage() {
   const router = useRouter();
  
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (pin.length !== 6) return;
- 
+  e.preventDefault();
+  
+  // Tambahkan baris ini untuk menghapus tanda hubung agar pin murni berisi 6 digit angka rapat (contoh: 777888)
+  const cleanPin = pin.replace(/[^0-9]/g, ''); 
+
+  // Ubah pengecekan panjang karakter menggunakan cleanPin
+  if (cleanPin.length !== 6) return;
+
+  setIsLoading(false);
+  setErrorMessage(null);
+  setIsLoading(true);
+
+  // Kirim cleanPin yang sudah bersih ke fungsi verifikasi
+  const result = await verifyVoterPin(cleanPin);
+
+  if (!result.success) {
+    setErrorMessage(result.error || "Gagal masuk.");
     setIsLoading(false);
-    setErrorMessage(null);
-    setIsLoading(true);
- 
-    const result = await verifyVoterPin(pin);
- 
-    if (!result.success) {
-      setErrorMessage(result.error || "Gagal masuk.");
-      setIsLoading(false);
-      setPin("");
-    } else {
-      router.push("/vote");
-    }
-  };
+    setPin("");
+  } else {
+    router.push("/vote");
+  }
+}
  
   return (
     <main className="bg-slate-50 min-h-screen w-full flex items-center justify-center p-4 relative overflow-hidden">

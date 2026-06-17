@@ -59,16 +59,18 @@ export async function loginAdmin(formData: FormData) {
 export async function verifyVoterPin(pin: string) {
   const supabase = await createClient();
 
+  // Memperbaiki nama tabel menjadi 'tokens' dan kolom menjadi 'token_code'
   const { data, error } = await supabase
-    .from("voters")
+    .from("tokens")
     .select("*")
-    .eq("pin", pin)
+    .eq("token_code", pin)
+    .eq("is_used", false) // Memastikan token belum pernah dipakai voting
     .single();
 
   if (error || !data) {
     return {
       success: false,
-      error: "PIN tidak valid",
+      error: "PIN tidak valid atau sudah digunakan",
     };
   }
 
