@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = 'force-dynamic';
+
 import { useState, useEffect } from "react";
 import { Plus, Search, Edit2, Trash2, Eye, Award, Loader2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
@@ -11,8 +13,6 @@ import {
   DialogFooter,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
-export const dynamic = 'force-dynamic';
 
 interface PaslonData {
   id: string;
