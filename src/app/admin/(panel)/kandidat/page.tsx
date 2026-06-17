@@ -12,6 +12,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+export const dynamic = 'force-dynamic';
+
 interface PaslonData {
   id: string;
   nomorUrut: string; // Tetap string di UI untuk kenyamanan input, dikonversi ke number saat ke DB
